@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Home Reservation System{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="box">
+      <form method="post" action="{{ url_for('main.index_post') }}">
+        <div class="field">
+          <label class="label" for="action">Choose an option:</label>
+          <div class="control">
+            <div class="select">
+              <select name="action" id="action">
+                <option value="reserve">Reserve a Seat</option>
+                <option value="admin">Admin Login</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <button class="button is-link" type="submit">Go</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
