@@ -5,42 +5,52 @@
 <section class="section">
   <div class="container" style="max-width: 500px; margin: auto;">
     <h1 class="title">Reserve Your Seat</h1>
-    <form method="post" action="{{ url_for('main.reserve') }}">
+    
+    {% if first_name and last_name %}
+    <div class="notification is-success">
+      <p>Congrats {{ first_name }}! Your seat is saved. Enjoy your trip!</p>
+      <p>Your E-Ticket number is: {{ generate_eticket(first_name) }}</p>
+    </div>
+    {% endif %}
+    
+    <form method="post" action="{{ url_for('main.reserve') }}" onsubmit="return validateForm()">
       <!-- First Name -->
       <div class="field">
-        <label class="label" for="first_name">First Name</label>
+        <label class="label" for="first_name">First Name*</label>
         <div class="control">
-          <input class="input" type="text" id="first_name" name="first_name" placeholder="First Name">
+          <input class="input" type="text" id="first_name" name="first_name" placeholder="First Name" value="{{ first_name if first_name else '' }}" required>
         </div>
       </div>
 
       <!-- Last Name -->
       <div class="field">
-        <label class="label" for="last_name">Last Name</label>
+        <label class="label" for="last_name">Last Name*</label>
         <div class="control">
-          <input class="input" type="text" id="last_name" name="last_name" placeholder="Last Name">
+          <input class="input" type="text" id="last_name" name="last_name" placeholder="Last Name" value="{{ last_name if last_name else '' }}" required>
         </div>
       </div>
 
-      <!-- Row Selector -->
+      <!-- Row Selector (now optional) -->
       <div class="field">
         <label class="label" for="row">Row</label>
         <div class="control">
           <div class="select">
             <select id="row" name="row">
-              <option disabled selected>Choose a row</option>
+              <option value="" selected>Choose a row</option>
+              <!-- Row options will go here later -->
             </select>
           </div>
         </div>
       </div>
 
-      <!-- Seat Selector -->
+      <!-- Seat Selector (now optional) -->
       <div class="field">
         <label class="label" for="seat">Seat</label>
         <div class="control">
           <div class="select">
             <select id="seat" name="seat">
-              <option disabled selected>Choose a seat</option>
+              <option value="" selected>Choose a seat</option>
+              <!-- Seat options will go here later -->
             </select>
           </div>
         </div>
@@ -50,10 +60,22 @@
       <div class="field">
         <div class="control">
           <button class="button is-primary" type="submit">Submit Reservation</button>
-          <!-- Need post method here for submitting reservation. -->
         </div>
       </div>
     </form>
   </div>
 </section>
+
+<script>
+function validateForm() {
+  const firstName = document.getElementById('first_name').value.trim();
+  const lastName = document.getElementById('last_name').value.trim();
+  
+  if (!firstName || !lastName) {
+    alert('Please enter both first and last names');
+    return false;
+  }
+  return true;
+}
+</script>
 {% endblock %}
