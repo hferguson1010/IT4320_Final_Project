@@ -3,6 +3,7 @@ from flask import (
     request, redirect, url_for,
     flash, session
 )
+from models import db, Admin
 
 admin_bp = Blueprint(
     'admin', __name__,
@@ -22,9 +23,12 @@ def login():
 def login_post():
     username = request.form.get('username')
     password = request.form.get('password')
-    # Temporary credentials replace with actual admin login information
-    if username == 'admin' and password == 'secret':
+
+    admin = Admin.query.filter_by(username=username).first()
+
+    if admin and admin.password == password:
         session['admin_logged_in'] = True
         return redirect(url_for('admin.seating'))
+
     flash('Invalid credentials', 'error')
     return redirect(url_for('admin.login'))
