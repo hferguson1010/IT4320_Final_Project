@@ -3,6 +3,7 @@ from flask import (
     request, redirect, url_for,
     flash, session
 )
+from models import Admin  # if you need to check login, etc.
 
 admin_bp = Blueprint(
     'admin', __name__,
@@ -22,9 +23,22 @@ def login():
 def login_post():
     username = request.form.get('username')
     password = request.form.get('password')
-    # Temporary credentials replace with actual admin login information
-    if username == 'admin' and password == 'secret':
+
+    # replace this with your real DB lookup…
+    admin = Admin.query.filter_by(username=username).first()
+    if admin and admin.password == password:
         session['admin_logged_in'] = True
         return redirect(url_for('admin.seating'))
+
     flash('Invalid credentials', 'error')
     return redirect(url_for('admin.login'))
+
+@admin_bp.route('/seating', methods=['GET', 'POST'])
+def seating():
+    if request.method == 'POST':
+        # GET THIS INFO FROM MAIN RESERVE.HTML(first_name, last_name, row, seat)
+        # and save to reservations table
+        flash('Seat assigned!', 'success')
+        return redirect(url_for('admin.seating'))
+
+    return render_template('seating.html')
