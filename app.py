@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, session, flash, request
 from flask_sqlalchemy import SQLAlchemy
 from main.routes import main_bp
 from admin.routes import admin_bp
@@ -21,6 +21,11 @@ def create_app():
     app.register_blueprint(main_bp)
     app.register_blueprint(admin_bp, url_prefix='/admin')
 
+    @app.before_request
+    def auto_logout_outside_admin():
+        if session.get('admin_logged_in'):
+            if not request.path.startswith('/admin'):
+                session.clear()
     return app
 
 if __name__ == '__main__':

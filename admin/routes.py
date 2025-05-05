@@ -3,7 +3,7 @@ from flask import (
     request, redirect, url_for,
     flash, session
 )
-from models import Admin  # if you need to check login, etc.
+from models import Admin
 
 admin_bp = Blueprint(
     'admin', __name__,
@@ -11,34 +11,32 @@ admin_bp = Blueprint(
     url_prefix='/admin'
 )
 
-@admin_bp.route('/', methods=['GET'])
-def admin_index():
-    return redirect(url_for('admin.login'))
-
-@admin_bp.route('/login', methods=['GET'])
+@admin_bp.route('/', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    seating_chart = None
+    reservations = None
+    total_sales = 0
 
-@admin_bp.route('/login', methods=['POST'])
-def login_post():
-    username = request.form.get('username')
-    password = request.form.get('password')
-
-    # replace this with your real DB lookup…
-    admin = Admin.query.filter_by(username=username).first()
-    if admin and admin.password == password:
-        session['admin_logged_in'] = True
-        return redirect(url_for('admin.seating'))
-
-    flash('Invalid credentials', 'error')
-    return redirect(url_for('admin.login'))
-
-@admin_bp.route('/seating', methods=['GET', 'POST'])
-def seating():
     if request.method == 'POST':
-        # GET THIS INFO FROM MAIN RESERVE.HTML(first_name, last_name, row, seat)
-        # and save to reservations table
-        flash('Seat assigned!', 'success')
-        return redirect(url_for('admin.seating'))
+        username = request.form.get('username')
+        password = request.form.get('password')
 
-    return render_template('seating.html')
+        admin = Admin.query.filter_by(username=username).first()
+        if admin and admin.password == password:
+            session['admin_logged_in'] = True
+            flash('Login successful!', 'success')
+        else:
+            flash('Invalid credentials', 'error')
+            return redirect(url_for('admin.login'))
+
+    if session.get('admin_logged_in'):
+        seating_chart = [[None for _ in range(4)] for _ in range(12)]
+        reservations = []
+        total_sales = 0
+
+    return render_template(
+        'login.html',
+        seating_chart=seating_chart,
+        reservations=reservations,
+        total_sales=total_sales
+    )
