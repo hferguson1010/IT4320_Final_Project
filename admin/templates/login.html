@@ -5,10 +5,47 @@
 <section class="section">
   <div class="container" style="max-width: 800px; margin: auto;">
 
-    {% if not session.get('admin_logged_in') %}
-    <!-- Admin Login Form -->
     <div class="box">
-      <h1 class="title">Administrator Login</h1>
+      {% if not session.get('admin_logged_in') %}
+        <h1 class="title">Administrator Login</h1>
+        <br>
+      {% else %}
+        <h1 class="title" style="text-align: center;">Administrator Dashboard</h1>
+        <br>
+      {% endif %}
+
+      {% if session.get('admin_logged_in') %}
+        <h3 class="subtitle">Printing Seating Chart...</h3>
+        <div style="text-align: left;">
+          {% for row in seating_chart %}
+            <div style="margin-bottom: 5px;">
+              {% for seat in row %}
+                {% if seat %}
+                  <span style="margin: 5px; font-size: 20px;">X</span>
+                {% else %}
+                  <span style="margin: 5px; font-size: 20px;">O</span>
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
+
+        <hr>
+
+        <p class="has-text-left">Total Sales: ${{ total_sales }}</p>
+
+        <hr>
+
+        <h2 class="subtitle">Reservation List</h2>
+        <ul class="has-text-left">
+          {% for res in reservations %}
+            <li>{{ res.first_name }} {{ res.last_name }} — Row {{ res.seat_row + 1 }}, Seat {{ res.seat_col + 1 }}</li>
+          {% endfor %}
+        </ul>
+
+        <hr>
+      {% endif %}
+
       <form method="post" action="{{ url_for('admin.login') }}">
         <div class="field">
           <label class="label">Username</label>
@@ -30,47 +67,8 @@
           </div>
         </div>
       </form>
-    </div>
-
-    {% else %}
-    <!-- Admin Dashboard -->
-    <div class="box">
-      <h1 class="title" style="text-align: center;">Administrator Login</h1>
-      <br>
-
-      <!-- Seating Map -->
-      <h3 class="subtitle">Printing Seating Chart...</h3>
-
-      <div style="text-align: left;">
-        {% for row in seating_chart %}
-          <div style="margin-bottom: 5px;">
-            {% for seat in row %}
-              {% if seat %}
-                <span style="margin: 5px; font-size: 20px;">X</span>
-              {% else %}
-                <span style="margin: 5px; font-size: 20px;">O</span>
-              {% endif %}
-            {% endfor %}
-          </div>
-        {% endfor %}
-      </div>
-
-
-      <hr>
-
-      <p class="has-text-left">Total Sales: ${{ total_sales }}</p>
-
-      <hr>
-
-      <h2 class="subtitle">Reservation List</h2>
-      <ul class="has-text-left">
-        {% for res in reservations %}
-          <li>{{ res.first_name }} {{ res.last_name }} — Row {{ res.seat_row + 1 }}, Seat {{ res.seat_col + 1 }}</li>
-        {% endfor %}
-      </ul>
 
     </div>
-    {% endif %}
 
   </div>
 </section>
