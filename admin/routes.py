@@ -3,7 +3,7 @@ from flask import (
     request, redirect, url_for,
     flash, session
 )
-from models import Admin
+from models import Admin, Reservation
 
 admin_bp = Blueprint(
     'admin', __name__,
@@ -30,9 +30,13 @@ def login():
             return redirect(url_for('admin.login'))
 
     if session.get('admin_logged_in'):
+        cost_matrix = get_cost_matrix()
         seating_chart = [[None for _ in range(4)] for _ in range(12)]
-        reservations = []
         total_sales = 0
+        reservations = Reservation.query.all()
+        for r in reservations:
+            seating_chart[r.seatRow][r.seatColumn] = 'reserved'
+            total_sales += cost_matrix[r.seatRow][r.seatColumn]
 
     return render_template(
         'login.html',
@@ -40,3 +44,6 @@ def login():
         reservations=reservations,
         total_sales=total_sales
     )
+
+def get_cost_matrix():
+    return [[100, 75, 50, 100] for _ in range(12)]

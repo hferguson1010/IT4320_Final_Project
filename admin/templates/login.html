@@ -40,7 +40,7 @@
         <h2 class="subtitle">Reservation List</h2>
         <ul class="has-text-left">
           {% for res in reservations %}
-            <li>{{ res.first_name }} {{ res.last_name }} — Row {{ res.seat_row + 1 }}, Seat {{ res.seat_col + 1 }}</li>
+            <li>{{ res.passengerName }} — Row {{ res.seatRow + 1 }}, Seat {{ res.seatColumn + 1 }}</li>
           {% endfor %}
         </ul>
 
