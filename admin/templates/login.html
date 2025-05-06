@@ -6,11 +6,9 @@
   <div class="container" style="max-width: 800px; margin: auto;">
 
     <div class="box">
-      <!-- If not logged in, show login form -->
       {% if not session.get('admin_logged_in') %}
+        <!-- Login Form -->
         <h1 class="title">Administrator Login</h1>
-        <br>
-
         <form method="post" action="{{ url_for('admin.login') }}">
           <div class="field">
             <label class="label">Username</label>
@@ -18,14 +16,12 @@
               <input class="input" type="text" name="username" placeholder="Username" required>
             </div>
           </div>
-
           <div class="field">
             <label class="label">Password</label>
             <div class="control">
               <input class="input" type="password" name="password" placeholder="Password" required>
             </div>
           </div>
-
           <div class="field">
             <div class="control">
               <button class="button is-link" type="submit">Log In</button>
@@ -34,17 +30,16 @@
         </form>
 
       {% else %}
-      <!-- If logged in, show dashboard -->
+        <!-- Dashboard -->
         <h1 class="title" style="text-align: center;">Administrator Dashboard</h1>
-        <br>
 
         <!-- Seating Chart -->
-        <h3 class="subtitle">Printing Seating Chart...</h3>
+        <h3 class="subtitle">Seating Chart</h3>
         <div style="text-align: left;">
           {% for row in seating_chart %}
             <div style="margin-bottom: 5px;">
               {% for seat in row %}
-                {% if seat %}
+                {% if seat == 'reserved' %}
                   <span style="margin: 5px; font-size: 20px;">X</span>
                 {% else %}
                   <span style="margin: 5px; font-size: 20px;">O</span>
@@ -65,16 +60,19 @@
         <h2 class="subtitle">Reservation List</h2>
         <ul class="has-text-left">
           {% for res in reservations %}
-            <li>
-              {{ res.passengerName }} — 
-              Row {{ res.seatRow + 1 }}, 
-              Seat {{ res.seatColumn + 1 }} — 
-              eTicket: {{ res.eTicketNumber }}
+            <li style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+              <span>
+                {{ res.passengerName }}: Row {{ res.seatRow+1 }} Seat {{ res.seatColumn+1 }}
+                -- Ticket Confirmation: {{ res.eTicketNumber }}
+              </span>
+              <form method="post" action="{{ url_for('admin.delete_reservation', reservation_id=res.id) }}">
+                <button class="button is-small is-danger">Delete</button>
+              </form>
             </li>
+          {% else %}
+            <li>No reservations yet.</li>
           {% endfor %}
         </ul>
-
-        <hr>
 
       {% endif %}
     </div>
