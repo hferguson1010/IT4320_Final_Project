@@ -3,8 +3,7 @@ from flask import (
     request, redirect, url_for, flash
 )
 from models import db, Reservation
-import random
-import string
+
 
 def generate_eticket(first_name):
     constant = "INFOTC4320"
@@ -45,7 +44,6 @@ def index_post():
 def reserve():
     seating_chart = [[None for _ in range(4)] for _ in range(12)]
 
-    # Load existing reservations
     reservations = Reservation.query.all()
     for res in reservations:
         seating_chart[res.seatRow][res.seatColumn] = res.passengerName
@@ -63,7 +61,6 @@ def reserve():
         row = int(row)
         seat = int(seat)
 
-        # Check if seat already taken
         existing_reservation = Reservation.query.filter_by(seatRow=row, seatColumn=seat).first()
         if existing_reservation:
             flash('That seat is already reserved!', 'error')
