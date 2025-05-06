@@ -24,4 +24,5 @@ def index_post():
 
 @main_bp.route('/reserve', methods=['GET'])
 def reserve():
-    return render_template('reserve.html')
+    seating_chart = [[None for _ in range(4)] for _ in range(12)]
+    return render_template('reserve.html', seating_chart=seating_chart)

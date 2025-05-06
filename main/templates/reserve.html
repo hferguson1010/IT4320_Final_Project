@@ -4,56 +4,76 @@
 {% block content %}
 <section class="section">
   <div class="container" style="max-width: 500px; margin: auto;">
-    <h1 class="title">Reserve Your Seat</h1>
-    <form method="post" action="{{ url_for('main.reserve') }}">
-      <!-- First Name -->
-      <div class="field">
-        <label class="label" for="first_name">First Name</label>
-        <div class="control">
-          <input class="input" type="text" id="first_name" name="first_name" placeholder="First Name">
-        </div>
-      </div>
 
-      <!-- Last Name -->
-      <div class="field">
-        <label class="label" for="last_name">Last Name</label>
-        <div class="control">
-          <input class="input" type="text" id="last_name" name="last_name" placeholder="Last Name">
+    <!-- Seating Chart -->
+    <div class="box">
+      <h1 class="title">Reserve Your Seat</h1>
+      <h3 class="title">Seating Chart</h3>
+      <h4 class="subtitle">X = Reserved Seat : O = Available Seat</h2>
+        <div style="text-align: left;">
+          {% for row in seating_chart %}
+            <div style="margin-bottom: 5px;">
+              {% for seat in row %}
+                {% if seat %}
+                  <span style="margin: 5px; font-size: 20px;">X</span>
+                {% else %}
+                  <span style="margin: 5px; font-size: 20px;">O</span>
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endfor %}
         </div>
-      </div>
 
-      <!-- Row Selector -->
-      <div class="field">
-        <label class="label" for="row">Row</label>
-        <div class="control">
-          <div class="select">
-            <select id="row" name="row">
-              <option disabled selected>Choose a row</option>
-            </select>
+      <form method="post" action="{{ url_for('main.reserve') }}">
+        <!-- First Name -->
+        <div class="field">
+          <label class="label" for="first_name">First Name</label>
+          <div class="control">
+            <input class="input" type="text" id="first_name" name="first_name" placeholder="First Name">
           </div>
         </div>
-      </div>
 
-      <!-- Seat Selector -->
-      <div class="field">
-        <label class="label" for="seat">Seat</label>
-        <div class="control">
-          <div class="select">
-            <select id="seat" name="seat">
-              <option disabled selected>Choose a seat</option>
-            </select>
+        <!-- Last Name -->
+        <div class="field">
+          <label class="label" for="last_name">Last Name</label>
+          <div class="control">
+            <input class="input" type="text" id="last_name" name="last_name" placeholder="Last Name">
           </div>
         </div>
-      </div>
 
-      <!-- Submit -->
-      <div class="field">
-        <div class="control">
-          <button class="button is-primary" type="submit">Submit Reservation</button>
-          <!-- Need post method here for submitting reservation. -->
+        <!-- Row Selector -->
+        <div class="field">
+          <label class="label" for="row">Row</label>
+          <div class="control">
+            <div class="select">
+              <select id="row" name="row">
+                <option disabled selected>Choose a row</option>
+              </select>
+            </div>
+          </div>
         </div>
-      </div>
-    </form>
+
+        <!-- Seat Selector -->
+        <div class="field">
+          <label class="label" for="seat">Seat</label>
+          <div class="control">
+            <div class="select">
+              <select id="seat" name="seat">
+                <option disabled selected>Choose a seat</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="field">
+          <div class="control">
+            <button class="button is-primary" type="submit">Submit Reservation</button>
+            <!-- Need post method here for submitting reservation. -->
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
 </section>
 {% endblock %}
