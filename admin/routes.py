@@ -1,44 +1,48 @@
+
 from flask import (
     Blueprint, render_template,
     request, redirect, url_for,
     flash, session
 )
-from models import Admin  # if you need to check login, etc.
+from models import Admin, Reservation
 
 admin_bp = Blueprint(
-    'admin', __name__,
-    template_folder='templates',
-    url_prefix='/admin'
+    'admin',
+    __name__,
+    url_prefix='/admin',
+    template_folder='templates'
 )
 
-@admin_bp.route('/', methods=['GET'])
-def admin_index():
-    return redirect(url_for('admin.login'))
-
-@admin_bp.route('/login', methods=['GET'])
+@admin_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        # grab credentials
+        username = request.form.get('username', '')
+        password = request.form.get('password', '')
+
+        # look up admin
+        admin = Admin.query.filter_by(username=username).first()
+        if admin and admin.password == password:
+            session['admin_logged_in'] = True
+            return redirect(url_for('admin.seating'))
+        # on failure, flash and redirect back
+        flash('Invalid credentials', 'error')
+        return redirect(url_for('admin.login'))
+
+    # GET → show the login form
     return render_template('login.html')
 
-@admin_bp.route('/login', methods=['POST'])
-def login_post():
-    username = request.form.get('username')
-    password = request.form.get('password')
 
-    # replace this with your real DB lookup…
-    admin = Admin.query.filter_by(username=username).first()
-    if admin and admin.password == password:
-        session['admin_logged_in'] = True
-        return redirect(url_for('admin.seating'))
-
-    flash('Invalid credentials', 'error')
-    return redirect(url_for('admin.login'))
-
-@admin_bp.route('/seating', methods=['GET', 'POST'])
+@admin_bp.route('/seating', methods=['GET'])
 def seating():
-    if request.method == 'POST':
-        # GET THIS INFO FROM MAIN RESERVE.HTML(first_name, last_name, row, seat)
-        # and save to reservations table
-        flash('Seat assigned!', 'success')
-        return redirect(url_for('admin.seating'))
+    if not session.get('admin_logged_in'):
+        return redirect(url_for('admin.login'))
 
-    return render_template('seating.html')
+    # fetch reservations and pass into template
+    reservations = Reservation.query.order_by(
+        Reservation.seatRow, Reservation.seatColumn
+    ).all()
+    return render_template(
+        'seating.html',
+        reservations=reservations
+    )

@@ -1,25 +1,36 @@
 {% extends 'base.html' %}
-{% block title %}Seat Assignment{% endblock %}
+{% block title %}Seating Chart & Reservations{% endblock %}
 
 {% block content %}
 <section class="section">
-  <div class="container" style="max-width: 800px; margin: auto;">
-
-
-    <div class="box has-text-centered">
-
-      <h1 class="title">Administrator Login</h1>
-
-      <!-- Seating Chart Placeholder need to implement seating chart matrix-->
-      <p class="has-text-left">printing seating chart...</p>
-
-      <!-- Total Sales Placeholder -->
-      <p class="has-text-left">Total Sales: $<!--add price implementation --></p>
-
-      <h2 class="subtitle">Reservation List</h2>
-      <!--implement reservation list functionality -->
-    </div>
-
+  <div class="container">
+    <h1 class="title">Current Reservations</h1>
+    <table class="table is-fullwidth is-striped">
+      <thead>
+        <tr>
+          <th>Passenger</th>
+          <th>Row</th>
+          <th>Seat</th>
+          <th>eTicket #</th>
+          <th>Booked At</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in reservations %}
+        <tr>
+          <td>{{ r.passengerName }}</td>
+          <td>{{ r.seatRow }}</td>
+          <td>{{ r.seatColumn }}</td>
+          <td>{{ r.eTicketNumber }}</td>
+          <td>{{ r.created.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" class="has-text-centered">No reservations yet</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </section>
 {% endblock %}
