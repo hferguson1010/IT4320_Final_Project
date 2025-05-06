@@ -20,7 +20,7 @@ class Reservation(db.Model):
     seatRow = db.Column(db.Integer, nullable=False)
     seatColumn = db.Column(db.Integer, nullable=False)
     eTicketNumber = db.Column(db.String(20), unique=True, nullable=False)
-    created = db.Column(db.DateTime, default=datetime)
+    created = db.Column(db.DateTime, server_default=db.func.now())
 
     def __repr__(self):
         return f'<Reservation {self.passengerName} - Row {self.seatRow}, Seat {self.seatColumn}>'

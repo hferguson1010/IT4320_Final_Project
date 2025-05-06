@@ -46,8 +46,11 @@
           <label class="label" for="row">Row</label>
           <div class="control">
             <div class="select">
-              <select id="row" name="row">
-                <option disabled selected>Choose a row</option>
+              <select id="row" name="row" required>
+                <option disabled selected value="">Choose a row</option>
+                {% for r in range(0, 12) %}
+                  <option value="{{ r }}">{{ r + 1 }}</option>  <!-- display 1–12 to user -->
+                {% endfor %}
               </select>
             </div>
           </div>
@@ -58,12 +61,16 @@
           <label class="label" for="seat">Seat</label>
           <div class="control">
             <div class="select">
-              <select id="seat" name="seat">
-                <option disabled selected>Choose a seat</option>
+              <select id="seat" name="seat" required>
+                <option disabled selected value="">Choose a seat</option>
+                {% for s in range(0, 4) %}
+                  <option value="{{ s }}">{{ s + 1 }}</option>  <!-- display 1–4 to user -->
+                {% endfor %}
               </select>
             </div>
           </div>
         </div>
+
 
         <!-- Submit -->
         <div class="field">

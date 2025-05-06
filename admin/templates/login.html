@@ -6,16 +6,39 @@
   <div class="container" style="max-width: 800px; margin: auto;">
 
     <div class="box">
+      <!-- If not logged in, show login form -->
       {% if not session.get('admin_logged_in') %}
         <h1 class="title">Administrator Login</h1>
         <br>
+
+        <form method="post" action="{{ url_for('admin.login') }}">
+          <div class="field">
+            <label class="label">Username</label>
+            <div class="control">
+              <input class="input" type="text" name="username" placeholder="Username" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Password</label>
+            <div class="control">
+              <input class="input" type="password" name="password" placeholder="Password" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="control">
+              <button class="button is-link" type="submit">Log In</button>
+            </div>
+          </div>
+        </form>
+
       {% else %}
+      <!-- If logged in, show dashboard -->
         <h1 class="title" style="text-align: center;">Administrator Dashboard</h1>
         <br>
-      {% endif %}
 
-      <!-- Seating Chart -->
-      {% if session.get('admin_logged_in') %}
+        <!-- Seating Chart -->
         <h3 class="subtitle">Printing Seating Chart...</h3>
         <div style="text-align: left;">
           {% for row in seating_chart %}
@@ -33,42 +56,27 @@
 
         <hr>
 
+        <!-- Total Sales -->
         <p class="has-text-left">Total Sales: ${{ total_sales }}</p>
 
         <hr>
 
+        <!-- Reservation List -->
         <h2 class="subtitle">Reservation List</h2>
         <ul class="has-text-left">
           {% for res in reservations %}
-            <li>{{ res.passengerName }} — Row {{ res.seatRow + 1 }}, Seat {{ res.seatColumn + 1 }}</li>
+            <li>
+              {{ res.passengerName }} — 
+              Row {{ res.seatRow + 1 }}, 
+              Seat {{ res.seatColumn + 1 }} — 
+              eTicket: {{ res.eTicketNumber }}
+            </li>
           {% endfor %}
         </ul>
 
         <hr>
+
       {% endif %}
-
-      <form method="post" action="{{ url_for('admin.login') }}">
-        <div class="field">
-          <label class="label">Username</label>
-          <div class="control">
-            <input class="input" type="text" name="username" placeholder="Username">
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="label">Password</label>
-          <div class="control">
-            <input class="input" type="password" name="password" placeholder="Password">
-          </div>
-        </div>
-
-        <div class="field">
-          <div class="control">
-            <button class="button is-link" type="submit">Log In</button>
-          </div>
-        </div>
-      </form>
-
     </div>
 
   </div>
