@@ -78,7 +78,7 @@ def reserve():
         db.session.add(new_reservation)
         db.session.commit()
 
-        flash(f'Reservation successful! Your eTicket number is {e_ticket_number}', 'success')
+        flash(f'Congratulations {first_name}! Row: {row}, Seat: {seat} is now reserved for you. Your eTicket number is {e_ticket_number}')
         return redirect(url_for('main.reserve'))
 
     return render_template('reserve.html', seating_chart=seating_chart)

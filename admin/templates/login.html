@@ -9,6 +9,7 @@
     {% if session.get('admin_logged_in') %}
       <div class="box">
         <h1 class="title" style="text-align: center;">Administrator Dashboard</h1>
+        <br>
 
         <!-- Seating Chart -->
         <h3 class="subtitle">Seating Chart</h3>
@@ -29,12 +30,12 @@
         <hr>
 
         <!-- Total Sales -->
-        <p class="has-text-left">Total Sales: ${{ total_sales }}</p>
+        <strong><p class="has-text-left">Total Sales: ${{ total_sales }}</p></strong>
 
         <hr>
 
         <!-- Reservation List -->
-        <h2 class="subtitle">Reservation List</h2>
+        <h2 class="subtitle" style="text-align: center">Reservation List</h2>
         <ul class="has-text-left">
           {% for res in reservations %}
             <li style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
